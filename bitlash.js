@@ -19,6 +19,7 @@ function Bitlash(options, readycallback) {
 Bitlash.prototype = {
 
 	debug: false,
+	echo: true,
 	ready: false,
 
 	init: function(options) {
@@ -115,6 +116,7 @@ Bitlash.prototype = {
 			this.instream = '';
 			if (this.lines && this.lines.length) {
 				var line = this.lines.shift();
+				console.log('Line:', line);
 				this.serialport.write(line + '\n');		// send the next command
 			}
 		}
@@ -166,8 +168,9 @@ Bitlash.prototype = {
 			req.end();
 		}
 		else {		// local file
-			var filetext = fs.readFileSync(argv.file, 'utf8');		// specifying 'utf8' to get a string result
+			var filetext = fs.readFileSync(filename, 'utf8');		// specifying 'utf8' to get a string result
 			this.lines = filetext.split('\n');
+console.log('file:', this.lines);
 			this.serialport.write('\n');	// get a prompt
 		}
 	}

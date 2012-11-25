@@ -1,0 +1,3 @@
+print "Hello world", millis
+print "this is test file"
+print "over and out"
