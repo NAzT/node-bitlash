@@ -23,7 +23,7 @@ var bitlash = new Bitlash.Bitlash({}, function (readytext) {
 
 setInterval(function() {
 	if (!run_blinky) return;
-	bitlash.exec('d13=!d13; print millis', function(reply) {
-		console.log(reply);
+	bitlash.exec('d13=!d13', function(reply) {
+		//console.log(reply);
 	});
-}, 1000);
+}, 125);

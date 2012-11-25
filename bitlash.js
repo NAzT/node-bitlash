@@ -114,7 +114,8 @@ Bitlash.prototype = {
 				callback(reply);
 			}
 			this.instream = '';
-			if (this.lines && this.lines.length) {
+
+			if (0 && this.lines && this.lines.length) {
 				var line = this.lines.shift();
 				console.log('Line:', line);
 				this.serialport.write(line + '\n');		// send the next command
@@ -128,7 +129,7 @@ Bitlash.prototype = {
 	},
 
 	stop: function() {
-		this.port.write(3);
+		this.serialport.write('\x03');
 	},
 
 	////////////////////
@@ -137,14 +138,14 @@ Bitlash.prototype = {
 	//
 
 	lines:[],
-	bigreply: '',
+	bigreply: [],
 	sendfileCallback: undefined,
 
 	nextLine: function(reply) {
-		this.bigreply += '' + reply;
+		this.bigreply.push(reply);
 		if (this.lines.length) {
 			var line = this.lines.shift();
-			console.log('Sending:', line);
+			if (this.debug) console.log('Sending:', line);
 			var self = this;
 			this.exec(line, function(reply) {
 				self.nextLine.call(self, reply);
@@ -154,9 +155,9 @@ Bitlash.prototype = {
 			if (this.sendfileCallback) {
 				var callback = this.sendfileCallback;
 				delete this.sendfileCallback;
-				callback(this.bigreply);
+				callback(this.bigreply.join('\n'));
 			}
-			this.bigreply = '';
+			this.bigreply = [];
 		}
 	},
 
@@ -185,7 +186,7 @@ Bitlash.prototype = {
 				res.setEncoding('utf8');
 				res.on('data', function (chunk) {
 					this.lines = chunk.split('\n')
-					if (this.lines.length) this.exec(this.lines.shift(), function(reply) {this.nextLine(reply);});
+					this.nextLine('');
 				});
 			});
 			req.on('error', function(e) {
@@ -198,10 +199,6 @@ Bitlash.prototype = {
 			var filetext = fs.readFileSync(filename, 'utf8');		// specifying 'utf8' to get a string result
 			this.lines = filetext.split('\n');
 			this.nextLine('');
-
-//			if (this.lines.length) {
-//			}
-
 		}
 	}
 }

@@ -21,8 +21,7 @@ See test.js
 
 - BUG: sendFile loses first few characters of first command
 
-- need an end-of-file callback
-- or sendFile could be synchronous
+- BUG: need a way to catch and handle bitlash exceptions
 
 - EventEmitter model
 
