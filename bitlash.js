@@ -138,19 +138,25 @@ Bitlash.prototype = {
 
 	lines:[],
 	bigreply: '',
-	sendfileCallback;
+	sendfileCallback: undefined,
 
 	nextLine: function(reply) {
 		this.bigreply += '' + reply;
 		if (this.lines.length) {
 			var line = this.lines.shift();
 			console.log('Sending:', line);
-			bitlash.exec(line, nextLine);
+			var self = this;
+			this.exec(line, function(reply) {
+				self.nextLine.call(self, reply);
+			});
 		}
 		else {
-			if (this.sendfileCallback) this.sendfileCallback(this.bigreply);
+			if (this.sendfileCallback) {
+				var callback = this.sendfileCallback;
+				delete this.sendfileCallback;
+				callback(this.bigreply);
+			}
 			this.bigreply = '';
-			return; 
 		}
 	},
 
@@ -179,7 +185,7 @@ Bitlash.prototype = {
 				res.setEncoding('utf8');
 				res.on('data', function (chunk) {
 					this.lines = chunk.split('\n')
-					if (lines.length) bitlash.exec(lines.shift(), this.nextLine);
+					if (this.lines.length) this.exec(this.lines.shift(), function(reply) {this.nextLine(reply);});
 				});
 			});
 			req.on('error', function(e) {
@@ -191,7 +197,11 @@ Bitlash.prototype = {
 		else {		// local file
 			var filetext = fs.readFileSync(filename, 'utf8');		// specifying 'utf8' to get a string result
 			this.lines = filetext.split('\n');
-			if (lines.length) bitlash.exec(lines.shift(), this.nextLine);
+			this.nextLine('');
+
+//			if (this.lines.length) {
+//			}
+
 		}
 	}
 }
