@@ -22,15 +22,43 @@ For a quick test, plug in your Arduino and run:
 
 ### bitlash.init(options, [readycallback])
 
+Call this once to open the serial connection to Bitlash.  The readycallback function will be called once Bitlash is ready to accept commands.
+
+Options:
+
+- baud
+- port
+
+- debug
+- echo
+- prompt
+
+	bitlash.init({baud:9600}, function(readytext) {
+		console.log(readytext);
+	});
+
 ### bitlash.exec(command, [callback])
 
+Execute the given Bitlash command on the Arduino and call the callback function with the resulting Bitlash output.
+
+	bitlash.exec('print millis', function(reply) {
+		console.log('millis:', reply);
+	});
+
+
 ### bitlash.stop()
+
+Sends ^C to Bitlash to stop any looping functions.
+
+	bitlash.stop();
 
 ### bitlash.sendFile(filename)
 
 If filename starts with http: or https: the contents of the url are sent to Bitlash.
 
-## Examples
+	bitlash.sendFile('testfile');
+
+## Sample Code
 
 	var Bitlash = require('./bitlash');
 	var run_blinky = false;
