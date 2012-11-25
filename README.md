@@ -1,5 +1,23 @@
 # bitlash-node - Control Bitlash-enabled Arduinos with Node.js
 
+This is a node.js library that enables PC control of a USB-connected Arduino running Bitlash.  You can execute Bitlash commands, files of Bitlash commands, or a url whose contents contain Bitlash commands; bitlash-node returns the resulting bitlash output to your node.js code.
+
+
+## Requirements
+
+- You need Bitlash on the Arduino.  For more information on bitlash see http://bitlash.net
+
+- You need node.js.  See http://nodejs.org
+
+## Installation
+
+	$ git clone http://github.com/billroy/bitlash-node
+	$ cd bitlash-node
+
+For a quick test, plug in your Arduino and run:
+
+	$ node test.js
+
 ## Usage
 
 ### bitlash.init(options, [readycallback])
@@ -31,7 +49,6 @@ If filename starts with http: or https: the contents of the url are sent to Bitl
 	
 					bitlash.sendFile('testfile', function (reply4) {
 						console.log('Reply 4 from bitlash:', reply4);
-						run_blinky = true;
 					});
 				});
 			});
