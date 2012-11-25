@@ -130,12 +130,33 @@ Bitlash.prototype = {
 	stop: function() {
 		this.port.write(3);
 	},
-	
+
 	////////////////////
 	//
 	// Send file or contents of URL
 	//
-	sendFile: function (filename) {
+
+	lines:[],
+	bigreply: '',
+	sendfileCallback;
+
+	nextLine: function(reply) {
+		this.bigreply += '' + reply;
+		if (this.lines.length) {
+			var line = this.lines.shift();
+			console.log('Sending:', line);
+			bitlash.exec(line, nextLine);
+		}
+		else {
+			if (this.sendfileCallback) this.sendfileCallback(this.bigreply);
+			this.bigreply = '';
+			return; 
+		}
+	},
+
+	sendFile: function (filename, callback) {
+	
+		this.sendfileCallback = callback;
 	
 		// If the file begins with http: fetch it from the web
 		var is_http = filename.indexOf("http://") == 0;
@@ -157,8 +178,8 @@ Bitlash.prototype = {
 			var req = client.request(options, function(res) {
 				res.setEncoding('utf8');
 				res.on('data', function (chunk) {
-					lines = chunk.split('\n')
-					this.serialport.write('\n');	// get a prompt
+					this.lines = chunk.split('\n')
+					if (lines.length) bitlash.exec(lines.shift(), this.nextLine);
 				});
 			});
 			req.on('error', function(e) {
@@ -170,8 +191,7 @@ Bitlash.prototype = {
 		else {		// local file
 			var filetext = fs.readFileSync(filename, 'utf8');		// specifying 'utf8' to get a string result
 			this.lines = filetext.split('\n');
-console.log('file:', this.lines);
-			this.serialport.write('\n');	// get a prompt
+			if (lines.length) bitlash.exec(lines.shift(), this.nextLine);
 		}
 	}
 }
