@@ -19,7 +19,7 @@ function Bitlash(options, readycallback) {
 Bitlash.prototype = {
 
 	debug: false,
-	echo: true,
+	echo: false,
 	ready: false,
 
 	init: function(options) {

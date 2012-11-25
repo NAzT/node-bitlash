@@ -1,3 +1,4 @@
 print "Hello world", millis
 print "this is test file"
-print "over and out"
+print "pin 13 should be blinking"
+print "press Control+] to exit"

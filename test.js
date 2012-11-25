@@ -1,15 +1,22 @@
+//
+// test.js: bitlash-node test/example
+//
+//	Copyright 2012 Bill Roy (MIT License; see LICENSE file)
+//
+
 var Bitlash = require('./bitlash');
 var run_blinky = false;
 
 var bitlash = new Bitlash.Bitlash({}, function (readytext) {
 	console.log('Banner:', readytext);
+
 	bitlash.exec('ls', function(reply) {
 		console.log('Reply 1 from bitlash:', reply);
 
 		bitlash.exec('print millis', function(reply2) {
 			console.log('Reply 2 from bitlash:', reply2);
 
-			bitlash.exec('print millis', function(reply3) {
+			bitlash.exec('peep', function(reply3) {
 				console.log('Reply 3 from bitlash:', reply3);
 
 				bitlash.sendFile('testfile', function (reply4) {
