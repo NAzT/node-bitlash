@@ -23,20 +23,28 @@ For a quick test, plug in your Arduino and run:
 
 ## Usage
 
-### bitlash.init(options [, function(banner) {...}]);
+### Setting up a Bitlash instance
 
-Call this once to open the serial connection to Bitlash.  The readycallback function will be called once Bitlash is ready to accept commands.  It is passed the text of the signon banner.
+Here is how to require the library, create and initialize a Bitlash instance, and catch the ready callback to start working with Bitlash:
 
-	bitlash.init({baud:9600}, function(readytext) {
-		console.log(readytext);
+	var Bitlash = require('./lib/bitlash.js');
+	var bitlash = new Bitlash.Bitlash({}, function (readytext) {
+		// ...your code here...
 	});
 
-Options:
 
-- port: serial port
+The readycallback function will be called once Bitlash is ready to accept commands.  It is passed the text of the signon banner.  It is not valid to call other methods on the bitlash object until the ready callback has fired.
+
+The options object may contain these options:
+
+- port: serial port (auto)
 - baud: serial port baud rate (57600)
-- debug: true for debug spew
-- echo: echo serial port to terminal
+- debug: true for debug spew (false)
+- echo: echo serial port to terminal (false)
+
+On mac and linux the first arduino usbserial port found will be used unless you specify a different port.  On windows you must specify the port.
+
+Pass {} if you don't need to pass any options.
 
 
 ### bitlash.exec(command [, function(reply) {}]);
@@ -47,6 +55,7 @@ Execute the given Bitlash command on the Arduino and call the callback function 
 		console.log('millis:', reply);
 	});
 
+It is only valid to call bitlash.exec() after the ready callback has fired.
 
 ### bitlash.stop();
 
@@ -63,6 +72,8 @@ If filename starts with http: or https: the contents of the url are sent to Bitl
 	bitlash.sendFile('testfile', function(reply) {
 		console.log('and the output was:', reply);
 	});
+
+It is only valid to call bitlash.sendFile() after the ready callback has fired.
 
 ## Sample Node.js program
 
