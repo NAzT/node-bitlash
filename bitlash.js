@@ -7,8 +7,7 @@ var SerialPort = require('serialport').SerialPort;
 var shell = require("shelljs");
 var fs = require('fs');
 var url = require('url');
-var http = require('http');
-var https = require('https');
+var request = require('request');
 
 function Bitlash(options, readycallback) {
 	if (readycallback) this.readycallback = readycallback;
@@ -164,36 +163,20 @@ Bitlash.prototype = {
 	sendFile: function (filename, callback) {
 	
 		this.sendfileCallback = callback;
-	
-		// If the file begins with http: fetch it from the web
-		var is_http = filename.indexOf("http://") == 0;
-		var is_https = filename.indexOf("https://") == 0;
-	
-		if (is_http || is_https) {
-	
-			var target = url.parse(filename);
-			//console.log(target);
-			var options = {
-				host: target.host,
-				path: target.path,
-				method: 'GET'
-			};
-			if (target.port) options.port = target.port;
-	
-			var client = http;
-			if (is_https) client = https;
-			var req = client.request(options, function(res) {
-				res.setEncoding('utf8');
-				res.on('data', function (chunk) {
-					this.lines = chunk.split('\n')
-					this.nextLine('');
-				});
+		var self = this;
+
+		if (filename.match(/^http|https\:\/\//)) {
+			request(filename, function (error, response, body) {
+				if (error || response.statusCode != 200 || !body) {
+					console.log('Request error:', error);
+					if (response) console.log(response.statusCode);
+					if (body) console.log(body.length);
+					return;
+				}
+				self.lines = body.split('\n');
+console.log('url fetch:', self.lines);
+				self.nextLine('');
 			});
-			req.on('error', function(e) {
-				console.log('problem with request: ' + e.message);
-				process.exit(-3);
-			});
-			req.end();
 		}
 		else {		// local file
 			var filetext = fs.readFileSync(filename, 'utf8');		// specifying 'utf8' to get a string result

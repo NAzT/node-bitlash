@@ -19,7 +19,7 @@ var bitlash = new Bitlash.Bitlash({}, function (readytext) {
 			bitlash.exec('peep', function(reply3) {
 				console.log('Reply 3 from bitlash:', reply3);
 
-				bitlash.sendFile('testfile', function (reply4) {
+				bitlash.sendFile('http://localhost/~bill/testbitlash', function (reply4) {
 					console.log('Reply 4 from bitlash:', reply4);
 					run_blinky = true;
 				});
