@@ -4,7 +4,7 @@
 //	Copyright 2012 Bill Roy (MIT License; see LICENSE file)
 //
 
-var Bitlash = require('./bitlash');
+var Bitlash = require('./lib/bitlash.js');
 var run_blinky = false;
 
 var bitlash = new Bitlash.Bitlash({}, function (readytext) {

@@ -1,7 +1,8 @@
 {
-	"name": "bitlash-node", 
+	"name": "node-bitlash", 
 	"version": "0.0.1",
 	"private": true, 
+	"preferglobal": false,
 	"author": "Bill Roy <bill@bitlash.net>",
 	"description": "Control Bitlash-enabled Arduinos with Node.js",
 	"dependencies": {
@@ -15,6 +16,6 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/billroy/bitlash-node.git"
+		"url": "git://github.com/billroy/node-bitlash.git"
 	}
 }
