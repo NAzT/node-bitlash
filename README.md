@@ -68,7 +68,7 @@ If filename starts with http: or https: the contents of the url are sent to Bitl
 
 (See the file test.js in the distribution.)
 
-	var Bitlash = require('./bitlash');
+	var Bitlash = require('./lib/bitlash.js');
 	var run_blinky = false;
 	
 	var bitlash = new Bitlash.Bitlash({}, function (readytext) {
@@ -98,6 +98,10 @@ If filename starts with http: or https: the contents of the url are sent to Bitl
 		});
 	}, 125);
 
+
+## Example: bitlash-tcp.js
+
+See this example for a simple use of the bitlash library to expose a usb-connected bitlash over tcp.
 
 ## Using bitlash-node without Bitlash
 

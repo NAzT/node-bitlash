@@ -3,6 +3,9 @@
 //
 //	Copyright 2012 Bill Roy (MIT License, see LICENSE file)
 //
+//	In one terminal: 	$ node bitlash-tcp.js
+//	In another: 		$ nc localhost 3000
+//
 var net = require('net');
 var Bitlash = require('./lib/bitlash.js');
 
